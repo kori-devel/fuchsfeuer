@@ -1,5 +1,0 @@
-#+TITLE: fuchsfeuer
-#+AUTHOR: kori-devel
-
-* Fuchsfeuer
-
