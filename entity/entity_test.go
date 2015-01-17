@@ -125,3 +125,50 @@ func TestDetach(t *testing.T) {
 	}
 
 }
+
+func TestReceive(t *testing.T) {
+
+	type E struct {
+		A int
+		B string
+	}
+
+	var tests = []struct {
+		in       *E
+		out      *E
+		in_name  string
+		out_name string
+	}{
+		{
+			&E{A: 1, B: "hi"},
+			&E{A: 1, B: "hi"},
+			"Test1",
+			"Test1",
+		},
+		{
+			&E{A: 1, B: "ho"},
+			&E{A: 1, B: "ho"},
+			"Test2",
+			"Test2",
+		},
+		{
+			&E{A: 3, B: "he"},
+			nil,
+			"Test3",
+			"Test4",
+		},
+	}
+
+	ent := New()
+
+	for _, v := range tests {
+		ent.Attach(v.in, v.in_name)
+
+		res, _ := ent.Receive(v.out_name)
+
+		if res != v.out {
+			t.Errorf("entity.Recive(...) => %v, expected %v", res, v.out)
+		}
+	}
+
+}

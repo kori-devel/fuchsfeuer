@@ -31,3 +31,5 @@ func (this *Entity) Attach(component Part, name string) (err error) {
 func (this *Entity) Detach(name string) {
 	delete(this.components, name)
 }
+
+func (this *Entity) Receive(name string) (part Part, err error) { return nil, nil }
