@@ -66,4 +66,62 @@ func TestAttach(t *testing.T) {
 
 func TestDetach(t *testing.T) {
 
+	type E struct {
+		A int
+		B string
+	}
+
+	var mocks = []struct {
+		obj  E
+		name string
+	}{
+		{
+			E{1, "hi"},
+			"Test1",
+		},
+		{
+			E{2, "ho"},
+			"Test2",
+		},
+	}
+
+	var tests = []struct {
+		name         string
+		expectRemove bool
+	}{
+		{
+			"Test1",
+			true,
+		},
+		{
+			"Test2",
+			true,
+		},
+		{
+			"Test2",
+			false,
+		},
+		{
+			"Test3",
+			false,
+		},
+	}
+
+	ent := New()
+
+	for _, v := range mocks {
+		ent.Attach(v.obj, v.name)
+	}
+
+	for _, v := range tests {
+		_, existsBefore := ent.components[v.name]
+		ent.Detach(v.name)
+		_, existsAfter := ent.components[v.name]
+
+		if (existsBefore && !existsAfter) != v.expectRemove {
+			t.Errorf("entity.Detach(...) => %t, expected %t", existsBefore && !existsAfter, v.expectRemove)
+		}
+
+	}
+
 }
