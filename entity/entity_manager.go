@@ -7,5 +7,11 @@ type EntityManager struct {
 }
 
 func NewEntityManager() (this *EntityManager) {
-	return nil
+	this = new(EntityManager)
+
+	this.entities = make([]*Entity, 0)
+	this.toAdd = make(chan *Entity, 64)
+	this.toRemove = make(chan *Entity, 64)
+
+	return this
 }
