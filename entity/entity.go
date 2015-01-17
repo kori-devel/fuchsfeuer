@@ -28,4 +28,6 @@ func (this *Entity) Attach(component Part, name string) (err error) {
 	return nil
 }
 
-func (this *Entity) Detach(name string) {}
+func (this *Entity) Detach(name string) {
+	delete(this.components, name)
+}
