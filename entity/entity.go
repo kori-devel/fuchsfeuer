@@ -14,6 +14,6 @@ func New() (this *Entity) {
 	return this
 }
 
-func (this *Entity) Attach(component Part, name string) {}
+func (this *Entity) Attach(component Part, name string) (err error) { return nil }
 
 func (this *Entity) Detach(name string) {}
