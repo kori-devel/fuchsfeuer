@@ -46,8 +46,7 @@ func (this *Entity) Update() {
 	max := len(this.actions)
 
 	for i := 0; i < max; i++ {
-		f := <-this.actions
-		f()
+		(<-this.actions)()
 	}
 
 }
