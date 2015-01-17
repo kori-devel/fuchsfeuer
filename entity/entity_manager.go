@@ -21,6 +21,7 @@ func (this *EntityManager) Add(entity *Entity) {
 }
 
 func (this *EntityManager) Remove(entity *Entity) {
+	this.toRemove <- entity
 }
 
 func (this *EntityManager) Update() {
@@ -28,4 +29,15 @@ func (this *EntityManager) Update() {
 	for i := 0; i < max; i++ {
 		this.entities = append(this.entities, <-this.toAdd)
 	}
+
+	max = len(this.toRemove)
+	for i := 0; i < max; i++ {
+		entity := <-this.toRemove
+		for x := len(this.entities) - 1; x >= 0; x-- {
+			if this.entities[x] == entity {
+				this.entities = append(this.entities[:x], this.entities[x+1:]...)
+			}
+		}
+	}
+
 }
