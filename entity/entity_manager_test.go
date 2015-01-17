@@ -26,6 +26,7 @@ func TestEntityManagerAdd(t *testing.T) {
 		entity := New()
 		Convey("Add entity", func() {
 			manager.Add(entity)
+			manager.Update()
 
 			So(entity, ShouldBeIn, manager.entities)
 		})

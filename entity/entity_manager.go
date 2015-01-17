@@ -17,4 +17,15 @@ func NewEntityManager() (this *EntityManager) {
 }
 
 func (this *EntityManager) Add(entity *Entity) {
+	this.toAdd <- entity
+}
+
+func (this *EntityManager) Remove(entity *Entity) {
+}
+
+func (this *EntityManager) Update() {
+	max := len(this.toAdd)
+	for i := 0; i < max; i++ {
+		this.entities = append(this.entities, <-this.toAdd)
+	}
 }
