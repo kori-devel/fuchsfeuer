@@ -15,3 +15,6 @@ func NewEntityManager() (this *EntityManager) {
 
 	return this
 }
+
+func (this *EntityManager) Add(entity *Entity) {
+}
