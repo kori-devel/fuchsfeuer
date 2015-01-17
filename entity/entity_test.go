@@ -1,18 +1,26 @@
 package entity
 
-import "testing"
+import (
+	"testing"
+
+	"fmt"
+
+	. "github.com/smartystreets/goconvey/convey"
+)
 
 func TestNewEntity(t *testing.T) {
 
-	ent := New()
+	Convey("Given a new entity instance", t, func() {
+		ent := New()
 
-	if ent == nil {
-		t.Errorf("New() => nil, expected entity")
-	}
+		Convey("Entity should not be nil", func() {
+			So(ent, ShouldNotBeNil)
+		})
 
-	if ent.components == nil {
-		t.Errorf("New().components => nil, expected map")
-	}
+		Convey("Entities components should not be nil", func() {
+			So(ent.components, ShouldNotBeNil)
+		})
+	})
 }
 
 func TestAttach(t *testing.T) {
@@ -22,45 +30,59 @@ func TestAttach(t *testing.T) {
 		B string
 	}
 
-	var tests = []struct {
-		in          E
-		out         E
-		name        string
-		expectError bool
-	}{
-		{
-			E{A: 1, B: "hi"},
-			E{A: 1, B: "hi"},
-			"Test1",
-			false,
-		},
-		{
-			E{A: 2, B: "Huhu"},
-			E{A: 1, B: "hi"},
-			"Test1",
-			true,
-		},
-		{
-			E{A: 3, B: "Hihi"},
-			E{A: 3, B: "Hihi"},
-			"Test2",
-			false,
-		},
-	}
+	Convey("Given some components", t, func() {
 
-	ent := New()
-
-	for _, v := range tests {
-		err := ent.Attach(v.in, v.name)
-
-		if (err != nil) != v.expectError {
-			t.Errorf("entity.Attach(...) => %t, expected %t", err != nil, v.expectError)
+		var tests = []struct {
+			in          E
+			out         E
+			name        string
+			expectError bool
+		}{
+			{
+				E{A: 1, B: "hi"},
+				E{A: 1, B: "hi"},
+				"Test1",
+				false,
+			},
+			{
+				E{A: 2, B: "Huhu"},
+				E{A: 1, B: "hi"},
+				"Test1",
+				true,
+			},
+			{
+				E{A: 3, B: "Hihi"},
+				E{A: 3, B: "Hihi"},
+				"Test2",
+				false,
+			},
 		}
 
-		if ent.components[v.name] != v.out {
-			t.Errorf("entity.Attach(...) => %v, expected %v", ent.components[v.name], v.out)
-		}
-	}
+		ent := New()
+
+		Convey("Try to attach every component", func() {
+
+			for _, v := range tests {
+				Convey(fmt.Sprintf("Attaching component %v", v), func() {
+					err := ent.Attach(v.in, v.name)
+
+					Convey(fmt.Sprintf("Error expected: %t", v.expectError), func() {
+						So(err != nil, ShouldEqual, v.expectError)
+					})
+
+					Convey(fmt.Sprintf("Component should be attached to the entity: %t", !v.expectError), func() {
+						if v.expectError {
+
+							So(ent.components[v.name], ShouldNotResemble, v.out)
+						} else {
+							So(ent.components[v.name], ShouldResemble, v.out)
+						}
+					})
+				})
+			}
+		})
+
+	})
 
 }
 
