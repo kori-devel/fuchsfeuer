@@ -1,5 +1,7 @@
 package entity
 
+import "fmt"
+
 type Part interface{}
 
 type Entity struct {
@@ -14,6 +16,16 @@ func New() (this *Entity) {
 	return this
 }
 
-func (this *Entity) Attach(component Part, name string) (err error) { return nil }
+func (this *Entity) Attach(component Part, name string) (err error) {
+
+	_, exists := this.components[name]
+	if exists {
+		return fmt.Errorf("Entity already has part with name %s", name)
+	}
+
+	this.components[name] = component
+
+	return nil
+}
 
 func (this *Entity) Detach(name string) {}
