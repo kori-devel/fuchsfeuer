@@ -18,6 +18,9 @@ func New() (this *Entity) {
 	return this
 }
 
+// Attach adds a Part to the entity
+//
+// Update must be called for the changes to take effect
 func (this *Entity) Attach(component Part, name string) {
 
 	this.actions <- func() {
@@ -26,12 +29,18 @@ func (this *Entity) Attach(component Part, name string) {
 
 }
 
+// Detach removes a Part from the entity
+//
+// Update must be called for the changes to take effect
 func (this *Entity) Detach(name string) {
 	this.actions <- func() {
 		delete(this.components, name)
 	}
 }
 
+// Receive returns a Part
+//
+// Returns nil and an error, if there is no Part to return
 func (this *Entity) Receive(name string) (part Part, err error) {
 
 	if _, exists := this.components[name]; !exists {
@@ -41,6 +50,7 @@ func (this *Entity) Receive(name string) (part Part, err error) {
 	return this.components[name], nil
 }
 
+// Update executes the actions in the queue
 func (this *Entity) Update() {
 
 	max := len(this.actions)
